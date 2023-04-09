@@ -6,7 +6,7 @@
   "author": "Adham",
   "license": "MIT",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "gzip -d < archive.tar.gz | tar xf - && npm install && node dist/server.js",
     "build": "npm install && npm run build-ts",
     "build-ts": "rimraf ./dist && tsc",
     "dev": "nodemon"
