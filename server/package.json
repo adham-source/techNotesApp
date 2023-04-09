@@ -6,9 +6,8 @@
   "author": "Adham",
   "license": "MIT",
   "scripts": {
-    "start": "npm run build && node dist/server.js",
-    "build": "npm install && npm run build-ts",
-    "build-ts": "rimraf ./dist && tsc",
+    "start": "node dist/server.js",
+    "build": "npm install && tsc",
     "dev": "nodemon"
   },
   "dependencies": {
@@ -36,7 +35,6 @@
     "@types/mongoose-sequence": "^3.0.7",
     "@types/node": "^18.14.6",
     "nodemon": "^2.0.21",
-    "rimraf": "^4.3.1",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   }
