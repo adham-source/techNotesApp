@@ -7,8 +7,9 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist/server.js",
-    "dev": "nodemon",
-    "build": "tsc"
+    "build": "npm install && npm run build-ts",
+    "build-ts": "rimraf ./dist && tsc",
+    "dev": "nodemon"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
