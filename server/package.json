@@ -6,9 +6,9 @@
   "author": "Adham",
   "license": "MIT",
   "scripts": {
-    "start": "yarn build && node dist/server.js",
+    "start": "node dist/server.js",
     "dev": "nodemon",
-    "build": "rimraf ./dist && tsc"
+    "build": "tsc"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
