@@ -3,10 +3,11 @@ import { useAddNewUserMutation } from "./usersApiSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSave, faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons"
+import ErrorMessage from "../../errors/ErrorMessage"
 import { ROLES } from "../../config/roles"
 
-const NAME_REGEX = /^[A-z]{3,20}$/
-const PASSWORD_REGEX = /^[A-z0-9!@#$%]{4,12}$/
+const NAME_REGEX = /^[A-z]{3,20}\s[A-z]{3,20}$/
+const PASSWORD_REGEX = /^[A-z0-9!@#$%]{8,30}$/
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 
@@ -81,7 +82,6 @@ const NewUserForm = () => {
       )
     })
 
-    const errClass = isError ? "text-red-500" : "text-gray-300"
     const validNameClass = !validName
       ? "border-red-500 focus:ring-blue-300 focus:border-blue-300"
       : "border-gray-300 focus:ring-green-500 focus:border-green-500"
@@ -96,7 +96,7 @@ const NewUserForm = () => {
 
   const content = (
     <>
-      <p className={errClass}>{error?.data?.message}</p>
+      {isError ? <ErrorMessage errorMessage={error?.data.message} /> : ""}
       <form className="bg-gray-800 p-2 rounded" onSubmit={onSaveUserClicked}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold">New User</h2>
@@ -140,7 +140,7 @@ const NewUserForm = () => {
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1" htmlFor="password">
             Password:
-            <span className="nowrap">[4-12 chars incl. !@#$%]</span>
+            <span className="nowrap">[8-30 chars incl. !@#$%]</span>
           </label>
           <div className="relative">
             <input

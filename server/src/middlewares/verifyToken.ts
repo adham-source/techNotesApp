@@ -27,9 +27,6 @@ export const verifyToken = expressAsyncHandler(async (req: Request, res: Respons
     }
 
     const decoded = verifyAccessToken(token)
-
-    console.log(decoded, "DECODED")
-
     req.user = {
         userId: decoded._id,
         name: decoded.name,

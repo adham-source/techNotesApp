@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useUpdateNoteMutation, useDeleteNoteMutation } from "./notesApiSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons"
 import useAuth from "../../hooks/useAuth"
+import UserSelectOptions from "../../components/UserSelectOptions"
 
 const EditNoteForm = ({ note, users }) => {
-   const { isManager, isAdmin } = useAuth()
+  const { userID, isManager, isAdmin } = useAuth()
   const [updateNote, { isLoading, isSuccess, isError, error }] =
     useUpdateNoteMutation()
 
@@ -47,7 +48,7 @@ const EditNoteForm = ({ note, users }) => {
   const onDeleteNoteClicked = async () => {
     await deleteNote({ id: note.id })
   }
-  
+
   const created = new Date(note.createdAt).toLocaleString("en-US", {
     day: "numeric",
     month: "long",
@@ -65,13 +66,14 @@ const EditNoteForm = ({ note, users }) => {
     second: "numeric",
   })
 
-  const options = users.map((user) => {
-    return (
-      <option key={user.id} value={user.id}>
-        {user.name}
-      </option>
-    )
-  })
+  const options = (
+    <UserSelectOptions
+      users={users}
+      isAdmin={isAdmin}
+      isManager={isManager}
+      ID={userID}
+    />
+  )
 
   const errClass = isError || isDelError ? "text-red-500" : "text-white"
   const validTitleClass = !title ? "border-red-500" : "border-green-500"
@@ -112,7 +114,7 @@ const EditNoteForm = ({ note, users }) => {
             >
               <FontAwesomeIcon icon={faSave} />
             </button>
-           { deleteButton }
+            {deleteButton}
           </div>
         </div>
         <label htmlFor="title" className="block text-sm font-medium mb-1">
@@ -158,8 +160,8 @@ const EditNoteForm = ({ note, users }) => {
               ASSIGNED TO:
             </label>
             <select
-              id="nqme"
-              name="nqme"
+              id="name"
+              name="info"
               className={`block w-full rounded-md shadow-sm py-2 px-3 border bg-gray-700 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
               value={userId}
               onChange={onUserIdChanged}

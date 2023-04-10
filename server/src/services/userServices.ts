@@ -13,7 +13,7 @@ class UserServices {
             }).trim().min(8, 'Password must contain at least 8 character(s)'),
             name: string({
                 required_error: "Name is required."
-            }).trim().min(3, 'Name must contain at least 8 character(s)'),
+            }).trim().min(3, 'Name must contain at least 3 character(s)'),
             roles: array(string()).nonempty().default(['Employee']),
             active: boolean().default(true)
         }).strict()

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { setCredentials } from "../../features/auth/authSlice"
-
+// baseUrl: "https://technotesapp-api.onrender.com/api/v1",
 const baseQuery = fetchBaseQuery({
   baseUrl: "https://technotesapp-api.onrender.com/api/v1",
   credentials: "include",

@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAddNewNoteMutation } from "./notesApiSlice"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSave } from "@fortawesome/free-solid-svg-icons"
 import ErrorMessage from "../../errors/ErrorMessage"
+import useAuth from "../../hooks/useAuth"
+import UserSelectOptions from "../../components/UserSelectOptions"
 
 const NewtNoteForm = ({ users }) => {
+  const { userID, isAdmin, isManager } = useAuth()
+ 
   const [addNewNote, { isLoading, isSuccess, isError, error }] =
     useAddNewNoteMutation()
 
@@ -37,13 +41,14 @@ const NewtNoteForm = ({ users }) => {
     }
   }
 
-  const options = users.map((user) => {
-    return (
-      <option key={user.id} value={user.id}>
-        {user.name}
-      </option>
-    )
-  })
+   const options = (
+     <UserSelectOptions
+       users={users}
+       isAdmin={isAdmin}
+       isManager={isManager}
+       ID={userID}
+     />
+   )
 
   const validTitleClass = !title ? "border-red-500" : ""
   const validTextClass = !text ? "border-red-500" : ""
@@ -95,8 +100,8 @@ const NewtNoteForm = ({ users }) => {
           ASSIGNED TO:
         </label>
         <select
-          id="nqme"
-          name="nqme"
+          id="name"
+          name="info"
           className={`block w-full rounded-md shadow-sm py-2 px-3 border bg-gray-700 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
           value={userId}
           onChange={onUserIdChanged}

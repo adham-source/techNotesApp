@@ -5,8 +5,10 @@ import { useGetUsersQuery } from "../users/usersApiSlice"
 import NewNoteForm from "./NewNoteForm"
 // import ErrorMessage from "../../errors/ErrorMessage"
 import PulseLoader from "react-spinners/PulseLoader"
+import useTitle from "../../hooks/useTitle"
 
 const NewNote = () => {
+   useTitle("techNotes: New Note")
   // const users = useSelector(selectAllUsers)
   // if (!users?.length)
   //   return <ErrorMessage errorMessage={"Not Currently Available"} />

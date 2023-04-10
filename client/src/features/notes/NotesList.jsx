@@ -1,11 +1,11 @@
 import { useGetNotesQuery } from "./notesApiSlice"
 import Note from "./Note"
-import Spinner from "../../components/Spinner"
 import ErrorMessage from "../../errors/ErrorMessage"
 import useAuth from "../../hooks/useAuth"
+import { PulseLoader } from "react-spinners"
 
 const NotesList = () => {
-  const { name, email, isManager, isAdmin } = useAuth()
+  const { email, isManager, isAdmin } = useAuth()
   const {
     data: notes,
     isLoading,
@@ -20,7 +20,7 @@ const NotesList = () => {
 
   let content
 
-  if (isLoading) content = (<Spinner />)
+  if (isLoading) content = <PulseLoader />
 
   if (isError) {
     content = <ErrorMessage errorMessage={error?.data?.message} />

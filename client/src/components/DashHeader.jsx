@@ -10,7 +10,7 @@ import {
 import { useNavigate, Link, useLocation } from "react-router-dom"
 
 import { useSendLogoutMutation } from "../features/auth/authApiSlice"
-import Spinner from "./Spinner"
+import { PulseLoader } from "react-spinners"
 import useAuth from "../hooks/useAuth"
 
 const DASH_REGEX = /^\/dash(\/)?$/
@@ -114,7 +114,7 @@ const DashHeader = () => {
 
     let buttonContent
     if (isLoading) {
-      buttonContent = <Spinner />
+      buttonContent = <PulseLoader color={"#FFF"} />
     } else {
       buttonContent = (
         <>

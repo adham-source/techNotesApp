@@ -10,10 +10,13 @@ import useAuth from "../../hooks/useAuth"
 import PulseLoader from "react-spinners/PulseLoader"
 import EditNoteForm from "./EditNoteForm"
 import ErrorMessage from "../../errors/ErrorMessage"
+import useTitle from "../../hooks/useTitle"
 
 const EditNote = () => {
+  useTitle("techNotes: Edit Note")
+
   const { id } = useParams()
-  const { name, email, isManager, isAdmin } = useAuth()
+  const { email, isManager, isAdmin } = useAuth()
 
   // const note = useSelector((state) => selectNoteById(state, id))
   // const users = useSelector(selectAllUsers)
@@ -30,21 +33,20 @@ const EditNote = () => {
     }),
   })
 
-  // const content =
-  //   note && users ? (
-  //     <EditNoteForm note={note} users={users} />
-  //   ) : (
-  //     <Spinner />
-  //   )
-
   if (!note || !users?.length) return <PulseLoader color={"#FFF"} />
 
   if (!isManager && !isAdmin) {
-    // What mean?
-    if (note.email !== email) {
+    if (note?.user.email !== email) {
       return <ErrorMessage errorMessage={"No access"} />
     }
   }
+
+  // const content =
+  //   note && users.length ? (
+  //     <EditNoteForm note={note} users={users} />
+  //   ) : (
+  //     <PulseLoader color={"#FFF"} />
+  //   )
 
   const content = <EditNoteForm note={note} users={users} />
 

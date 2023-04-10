@@ -8,10 +8,11 @@ import {
   faEyeSlash,
   faEye,
 } from "@fortawesome/free-solid-svg-icons"
+import ErrorMessage from "../../errors/ErrorMessage"
 import { ROLES } from "../../config/roles"
 
 const NAME_REGEX = /^[A-z]{3,20}$/
-const PASSWORD_REGEX = /^[A-z0-9!@#$%]{4,12}$/
+const PASSWORD_REGEX = /^[A-z0-9!@#$%]{8,30}$/
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const EditUserForm = ({ user }) => {
@@ -105,7 +106,7 @@ const EditUserForm = ({ user }) => {
     canSave = [roles.length, validName, validEmail].every(Boolean) && !isLoading
   }
 
-  const errClass = isError || isDelError ? "border-red-500" : "text-gray-300"
+  // const errClass = isError || isDelError ? "text-red-500" : "text-gray-300"
   const validNameClass = !validName
     ? "border-red-500 focus:ring-blue-300 focus:border-blue-300"
     : "border-gray-300 focus:ring-green-500 focus:border-green-500"
@@ -122,8 +123,7 @@ const EditUserForm = ({ user }) => {
 
   const content = (
     <>
-      <p className={errClass}>{errContent}</p>
-
+      {errContent || isError ? <ErrorMessage errorMessage={errContent} /> : ""}
       <form
         className="bg-gray-800 p-2 rounded"
         onSubmit={(e) => e.preventDefault()}
@@ -182,7 +182,7 @@ const EditUserForm = ({ user }) => {
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1" htmlFor="password">
             Password: <span className="nowrap">[empty = no change]</span>{" "}
-            <span className="nowrap">[4-12 chars incl. !@#$%]</span>
+            <span className="nowrap">[8-30 chars incl. !@#$%]</span>
           </label>
           <div className="relative">
             <input
@@ -224,7 +224,7 @@ const EditUserForm = ({ user }) => {
               onChange={onActiveChanged}
               className="h-4 w-4 text-green-500 focus:ring-green-400 border-gray-300 rounded mr-2"
             />
-            <span className="text-gray-200"> {active ? "Yes": "No"}</span>
+            <span className="text-gray-200"> {active ? "Yes" : "No"}</span>
           </div>
         </div>
         <label htmlFor="roles" className="block text-sm font-medium mb-1">
