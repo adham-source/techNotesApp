@@ -23,7 +23,7 @@ const DashFooter = () => {
 
   return (
     <footer className="bg-gray-800 text-white border-t py-3">
-      <div className="container mx-auto flex justify-between items-center">
+      <div className="container mx-auto flex justify-between items-center px-2">
         <div className="flex-1">
           <p className="text-sm">Current User: {name}, Email: {email}</p>
           <p className="text-sm">Status: {status}</p>

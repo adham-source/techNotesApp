@@ -52,6 +52,7 @@ class AuthControllers {
         // )
 
         const accessToken: string = generateAccessToken({
+            userId: user._id.toString(),
             name: user.name,
             email: user.email,
             roles: user.roles

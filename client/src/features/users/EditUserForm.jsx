@@ -11,7 +11,7 @@ import {
 import ErrorMessage from "../../errors/ErrorMessage"
 import { ROLES } from "../../config/roles"
 
-const NAME_REGEX = /^[A-z]{3,20}$/
+const NAME_REGEX = /^(?:[A-Za-z]{3,}\b|(?:[A-Za-z]+\s){1,2}[A-Za-z]+)$/
 const PASSWORD_REGEX = /^[A-z0-9!@#$%]{8,30}$/
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 

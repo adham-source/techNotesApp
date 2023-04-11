@@ -6,7 +6,7 @@ const DashLayout = () => {
     <section className="flex flex-col min-h-screen bg-gray-900 text-white">
       <DashHeader />
       <section className="flex-1 py-4">
-        <div className="container mx-auto space-y-4 py-5">
+        <div className="container mx-auto space-y-4 py-5 px-2">
           <Outlet />
         </div>
       </section>

@@ -7,11 +7,12 @@ const useAuth = () => {
   let isManager = false
   let isAdmin = false
   let status = "Employee"
+  let userID = ""
 
   if (token) {
     const decoded = jwtDecode(token)
     const { userId, name, email, roles } = decoded
-    let userID = userId
+    userID = userId
     isManager = roles.includes("Manager")
     isAdmin = roles.includes("Admin")
 

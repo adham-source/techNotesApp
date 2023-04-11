@@ -5,7 +5,7 @@ const UserSelectOptions = ({ users, isAdmin, isManager, ID }) => {
     if (isAdmin || isManager) {
       return users
     }
-    return users.filter((user) => user.id.toString() === ID)
+    return users.filter((user) => user.id === ID)
   }, [users, isAdmin, isManager, ID])
 
   const options = useMemo(

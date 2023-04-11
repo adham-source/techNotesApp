@@ -137,7 +137,7 @@ const DashHeader = () => {
         {isError ? <ErrorMessage errorMessage={error?.data?.message} /> : ""}
         {/* <p className={errClass}>{error?.data?.message}</p> */}
         <header className="bg-gray-800 text-white border-b py-3">
-          <div className="container mx-auto flex justify-between items-center">
+          <div className="container mx-auto flex justify-between items-center px-2">
             <Link to="/dash">
               <h1 className="text-xl font-bold">techNotes</h1>
             </Link>
