@@ -15,7 +15,7 @@ const errorHandler = (err: Error, req: Request, res: Response, next: NextFunctio
 
     res.status(status)
 
-    // Whay add isError
+    // Why add isError
     res.json({success: false, message: err.message, isError: true})
 }
 

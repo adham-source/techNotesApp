@@ -20,7 +20,7 @@ const NotesList = () => {
 
   let content
 
-  if (isLoading) content = <PulseLoader />
+  if (isLoading) return <PulseLoader color={"#FFF"} />
 
   if (isError) {
     content = <ErrorMessage errorMessage={error?.data?.message} />
@@ -87,7 +87,7 @@ const NotesList = () => {
             </tr>
           </thead>
           <tbody className="bg-gray-700 divide-y divide-gray-600">
-            {tableContent}
+           {tableContent}
           </tbody>
         </table>
       </div>

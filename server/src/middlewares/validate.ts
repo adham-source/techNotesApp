@@ -13,7 +13,8 @@ const validate =
             } catch (error) {
                 if (error instanceof ZodError) {
                     const errors = error.issues.map(error => error.message)
-                    return res.status(400).json({ success: false, errors })
+                    const message = errors.join(', ')
+                    return res.status(400).json({ success: false, errors, message })
                 }
 
             }

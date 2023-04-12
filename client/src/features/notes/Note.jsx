@@ -7,19 +7,22 @@ import { useNavigate } from "react-router-dom"
 
 import { useGetNotesQuery } from "./notesApiSlice"
 import { memo } from "react"
+import { PulseLoader } from "react-spinners"
 
 
 
 const Note = ({ noteId }) => {
   // const note = useSelector((state) => selectNoteById(state, noteId))
 
-  const { note } = useGetNotesQuery("notesList", {
+  const { note, isLoading } = useGetNotesQuery("notesList", {
     selectFromResult: ({ data }) => ({
       note: data?.entities[noteId],
     }),
   })
 
   const navigate = useNavigate()
+
+  if(isLoading) return <PulseLoader color="#FFF" />
 
   if (note) {
     const { title, user, completed, createdAt, updatedAt } = note

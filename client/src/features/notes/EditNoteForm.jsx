@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons"
 import useAuth from "../../hooks/useAuth"
 import UserSelectOptions from "../../components/UserSelectOptions"
+import { PulseLoader } from "react-spinners"
 
 const EditNoteForm = ({ note, users }) => {
   const { userID, isManager, isAdmin } = useAuth()
@@ -13,7 +14,12 @@ const EditNoteForm = ({ note, users }) => {
 
   const [
     deleteNote,
-    { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
+    {
+      isSuccess: isDelSuccess,
+      isError: isDelError,
+      isLoading: isDelLoading,
+      error: delerror,
+    },
   ] = useDeleteNoteMutation()
 
   const navigate = useNavigate()
@@ -36,6 +42,9 @@ const EditNoteForm = ({ note, users }) => {
   const onTextChanged = (e) => setText(e.target.value)
   const onCompletedChanged = (e) => setCompleted((prev) => !prev)
   const onUserIdChanged = (e) => setUserId(e.target.value)
+
+  // If use this line `Form submission canceled because the form is not connected`
+  // if (isLoading || isDelLoading) return <PulseLoader color={"#FFF"} />
 
   const canSave = [title, text, userId].every(Boolean) && !isLoading
 

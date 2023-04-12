@@ -6,10 +6,10 @@ class NoteServices {
         body: object({
             user: string({
                 required_error: "User ID is required."
-            }).trim().refine((value) => isValidObjectId(value), 'Invalid Id'),
+            }).trim().refine((value) => isValidObjectId(value), 'Invalid Assign'),
             title: string({
                 required_error: "Title is required."
-            }).trim().min(3, "Title must contain at least 3 characters").max(100),
+            }).trim().min(3, "Title must contain at least 3 characters").max(20),
             text: string({
                 required_error: "Text is required."
             }).trim().min(10, "Text must contain at least 10 characters").max(1000),
@@ -21,10 +21,10 @@ class NoteServices {
         body: object({
             id: string({
                 required_error: "Note ID is required."
-            }).trim().refine((value) => isValidObjectId(value), 'Invalid Id'),
+            }).trim().refine((value) => isValidObjectId(value), 'Invalid Assign'),
             user: string({
                 required_error: "User ID is required."
-            }).trim().refine((value) => isValidObjectId(value), 'Invalid Id'),
+            }).trim().refine((value) => isValidObjectId(value), 'Invalid Assign'),
             title: string({
                 required_error: "Title is required."
             }).trim().min(3, "Title must contain at least 3 characters").max(100),
@@ -39,7 +39,7 @@ class NoteServices {
         body: object({
             id: string({
                 required_error: "Note ID is required."
-            }).trim().refine((value) => isValidObjectId(value), 'Invalid Id')
+            }).trim().refine((value) => isValidObjectId(value), 'Invalid Assign')
         }).strict()
     }
 

@@ -6,6 +6,7 @@ import { faSave } from "@fortawesome/free-solid-svg-icons"
 import ErrorMessage from "../../errors/ErrorMessage"
 import useAuth from "../../hooks/useAuth"
 import UserSelectOptions from "../../components/UserSelectOptions"
+import { PulseLoader } from "react-spinners"
 
 const NewtNoteForm = ({ users }) => {
   const { userID, isAdmin, isManager } = useAuth()
@@ -31,6 +32,8 @@ const NewtNoteForm = ({ users }) => {
   const onTitleChanged = (e) => setTitle(e.target.value)
   const onTextChanged = (e) => setText(e.target.value)
   const onUserIdChanged = (e) => setUserId(e.target.value)
+  
+  if(isLoading) return <PulseLoader color={"#FFF"} />
 
   const canSave = [title, text, userId].every(Boolean) && !isLoading
 
