@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, lazy, Suspense } from "react"
 import { useAddNewUserMutation } from "./usersApiSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSave, faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons"
-import ErrorMessage from "../../errors/ErrorMessage"
 import { ROLES } from "../../config/roles"
+import { PulseLoader } from "react-spinners"
+
+const ErrorMessage = lazy(() => import("../../errors/ErrorMessage"))
 
 const NAME_REGEX = /^(?:[A-Za-z]{3,}\b|(?:[A-Za-z]+\s){1,2}[A-Za-z]+)$/
 const PASSWORD_REGEX = /^[A-z0-9!@#$%]{8,30}$/
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
 
 const NewUserForm = () => {
   const [addNewUser, { isLoading, isSuccess, isError, error }] =
@@ -25,78 +26,79 @@ const NewUserForm = () => {
 
   const [password, setPassword] = useState("")
   const [validPassword, setValidPassword] = useState(false)
-    const [showPassword, setShowPassword] = useState(false)
-
+  const [showPassword, setShowPassword] = useState(false)
 
   const [roles, setRoles] = useState(["Employee"])
 
-   useEffect(() => {
-     setValidName(NAME_REGEX.test(name))
-   }, [name])
+  useEffect(() => {
+    setValidName(NAME_REGEX.test(name))
+  }, [name])
 
-   useEffect(() => {
-     setValidEmail(EMAIL_REGEX.test(email))
-   }, [email])
+  useEffect(() => {
+    setValidEmail(EMAIL_REGEX.test(email))
+  }, [email])
 
-   useEffect(() => {
-     setValidPassword(PASSWORD_REGEX.test(password))
-   }, [password])
+  useEffect(() => {
+    setValidPassword(PASSWORD_REGEX.test(password))
+  }, [password])
 
-   useEffect(() => {
-     if (isSuccess) {
-       setName("")
-       setEmail("")
-       setPassword("")
-       setRoles([])
-       navigate("/dash/users")
-     }
-   }, [isSuccess, navigate])
-
-    const onNameChanged = (e) => setName(e.target.value)
-    const onEmailChanged = (e) => setEmail(e.target.value)
-    const onPasswordChanged = (e) => setPassword(e.target.value)
-
-    const onRolesChanged = (e) => {
-      const values = Array.from(
-        e.target.selectedOptions, // HTMLCollection
-        (option) => option.value,
-      )
-      setRoles(values)
+  useEffect(() => {
+    if (isSuccess) {
+      setName("")
+      setEmail("")
+      setPassword("")
+      setRoles([])
+      navigate("/dash/users")
     }
+  }, [isSuccess, navigate])
 
-    const canSave =
-      [roles.length, validName, validEmail, validPassword].every(Boolean) && !isLoading
+  const onNameChanged = (e) => setName(e.target.value)
+  const onEmailChanged = (e) => setEmail(e.target.value)
+  const onPasswordChanged = (e) => setPassword(e.target.value)
 
-    const onSaveUserClicked = async (e) => {
-      e.preventDefault()
-      if (canSave) {
-        await addNewUser({ name, email, password, roles })
-      }
+  const onRolesChanged = (e) => {
+    const values = Array.from(
+      e.target.selectedOptions, // HTMLCollection
+      (option) => option.value,
+    )
+    setRoles(values)
+  }
+
+  const canSave =
+    [roles.length, validName, validEmail, validPassword].every(Boolean) &&
+    !isLoading
+
+  const onSaveUserClicked = async (e) => {
+    e.preventDefault()
+    if (canSave) {
+      await addNewUser({ name, email, password, roles })
     }
+  }
 
-    const options = Object.values(ROLES).map((role) => {
-      return (
-        <option key={role} value={role}>
-          {role}
-        </option>
-      )
-    })
+  const options = Object.values(ROLES).map((role) => {
+    return (
+      <option key={role} value={role}>
+        {role}
+      </option>
+    )
+  })
 
-    const validNameClass = !validName
-      ? "border-red-500 focus:ring-blue-300 focus:border-blue-300"
-      : "border-gray-300 focus:ring-green-500 focus:border-green-500"
-    const validEmailClass = !validEmail
-      ? "border-red-500 focus:ring-blue-300 focus:border-blue-300"
-      : "border-gray-300 focus:ring-green-500 focus:border-green-500"
-    const validPasswordClass = !validPassword
-      ? "border-red-500 focus:ring-blue-300 focus:border-blue-300"
-      : "border-gray-300 focus:ring-green-500 focus:border-green-500"
-    const validRolesClass = !Boolean(roles.length) ? "border-red-500" : ""
-
+  const validNameClass = !validName
+    ? "border-red-500 focus:ring-blue-300 focus:border-blue-300"
+    : "border-gray-300 focus:ring-green-500 focus:border-green-500"
+  const validEmailClass = !validEmail
+    ? "border-red-500 focus:ring-blue-300 focus:border-blue-300"
+    : "border-gray-300 focus:ring-green-500 focus:border-green-500"
+  const validPasswordClass = !validPassword
+    ? "border-red-500 focus:ring-blue-300 focus:border-blue-300"
+    : "border-gray-300 focus:ring-green-500 focus:border-green-500"
+  const validRolesClass = !Boolean(roles.length) ? "border-red-500" : ""
 
   const content = (
     <>
-      {isError ? <ErrorMessage errorMessage={error?.data.message} /> : ""}
+      <Suspense fallback={<PulseLoader color="#FFF" />}>
+        {isError ? <ErrorMessage errorMessage={error?.data.message} /> : ""}
+      </Suspense>
       <form className="bg-gray-800 p-2 rounded" onSubmit={onSaveUserClicked}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold">New User</h2>
@@ -108,7 +110,7 @@ const NewUserForm = () => {
             disabled={!canSave}
           >
             <FontAwesomeIcon icon={faSave} className="mr-2" />
-            Save
+            {isLoading ? <PulseLoader size={8} color="#FFF" /> : "save"}
           </button>
         </div>
         <label htmlFor="username" className="block text-sm font-medium mb-1">
@@ -183,7 +185,6 @@ const NewUserForm = () => {
       </form>
     </>
   )
-
 
   return content
 }

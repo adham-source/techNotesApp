@@ -1,16 +1,20 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, Suspense } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAddNewNoteMutation } from "./notesApiSlice"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSave } from "@fortawesome/free-solid-svg-icons"
-import ErrorMessage from "../../errors/ErrorMessage"
 import useAuth from "../../hooks/useAuth"
-import UserSelectOptions from "../../components/UserSelectOptions"
 import { PulseLoader } from "react-spinners"
+import { lazy } from "react"
+
+const ErrorMessage = lazy(() => import("../../errors/ErrorMessage"))
+const UserSelectOptions = lazy(() =>
+  import("../../components/UserSelectOptions"),
+)
 
 const NewtNoteForm = ({ users }) => {
   const { userID, isAdmin, isManager } = useAuth()
- 
+
   const [addNewNote, { isLoading, isSuccess, isError, error }] =
     useAddNewNoteMutation()
 
@@ -32,8 +36,8 @@ const NewtNoteForm = ({ users }) => {
   const onTitleChanged = (e) => setTitle(e.target.value)
   const onTextChanged = (e) => setText(e.target.value)
   const onUserIdChanged = (e) => setUserId(e.target.value)
-  
-  if(isLoading) return <PulseLoader color={"#FFF"} />
+
+  if (isLoading) return <PulseLoader color={"#FFF"} />
 
   const canSave = [title, text, userId].every(Boolean) && !isLoading
 
@@ -44,21 +48,23 @@ const NewtNoteForm = ({ users }) => {
     }
   }
 
-   const options = (
-     <UserSelectOptions
-       users={users}
-       isAdmin={isAdmin}
-       isManager={isManager}
-       ID={userID}
-     />
-   )
+  const options = (
+    <UserSelectOptions
+      users={users}
+      isAdmin={isAdmin}
+      isManager={isManager}
+      ID={userID}
+    />
+  )
 
   const validTitleClass = !title ? "border-red-500" : ""
   const validTextClass = !text ? "border-red-500" : ""
 
   const content = (
     <>
-      {isError ? <ErrorMessage errorMessage={error?.data?.message} />: ""} 
+      <Suspense fallback={<PulseLoader color="#FFF" />}>
+        {isError ? <ErrorMessage errorMessage={error?.data?.message} /> : ""}
+      </Suspense>
       <form className="bg-gray-800 p-2 rounded" onSubmit={onSaveNoteClicked}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold">New Note</h2>
@@ -70,7 +76,7 @@ const NewtNoteForm = ({ users }) => {
             disabled={!canSave}
           >
             <FontAwesomeIcon icon={faSave} className="mr-2" />
-            Save
+            {isLoading ? <PulseLoader size={8} color="#FFF" /> : Save}
           </button>
         </div>
         <label htmlFor="title" className="block text-sm font-medium mb-1">

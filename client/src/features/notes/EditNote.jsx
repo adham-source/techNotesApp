@@ -1,16 +1,13 @@
+import { Suspense, lazy } from "react"
 import { useParams } from "react-router-dom"
-// import { useSelector } from "react-redux"
-// import { selectNoteById } from "./notesApiSlice"
-// import { selectAllUsers } from "../users/usersApiSlice"
-// import Spinner from "../../components/Spinner"
-
 import { useGetNotesQuery } from "./notesApiSlice"
 import { useGetUsersQuery } from "../users/usersApiSlice"
 import useAuth from "../../hooks/useAuth"
 import PulseLoader from "react-spinners/PulseLoader"
-import EditNoteForm from "./EditNoteForm"
-import ErrorMessage from "../../errors/ErrorMessage"
 import useTitle from "../../hooks/useTitle"
+
+const EditNoteForm = lazy(() => import("./EditNoteForm"))
+const ErrorMessage = lazy(() => import("../../errors/ErrorMessage"))
 
 const EditNote = () => {
   useTitle("techNotes: Edit Note")
@@ -37,18 +34,20 @@ const EditNote = () => {
 
   if (!isManager && !isAdmin) {
     if (note?.user.email !== email) {
-      return <ErrorMessage errorMessage={"No access"} />
+      return (
+        <Suspense fallback={<PulseLoader color="#FFF" />}>
+          <ErrorMessage errorMessage={"No access"} />
+        </Suspense>
+      )
     }
   }
 
-  // const content =
-  //   note && users.length ? (
-  //     <EditNoteForm note={note} users={users} />
-  //   ) : (
-  //     <PulseLoader color={"#FFF"} />
-  //   )
-
-  const content = <EditNoteForm note={note} users={users} />
+  const content = (
+    <Suspense fallback={<PulseLoader color="#FFF" />}>
+      <EditNoteForm note={note} users={users} />
+    </Suspense>
+  )
+  
 
   return content
 }

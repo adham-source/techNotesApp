@@ -20,8 +20,12 @@ const Welcome = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <LinkCard to="/dash/notes" title="View techNotes" />
           <LinkCard to="/dash/notes/new" title="Add New techNote" />
-          {(isManager || isAdmin ) && <LinkCard to="/dash/users" title="View User Settings" /> }
-          {(isManager || isAdmin ) && <LinkCard to="/dash/users/new" title="Add New User" /> }
+          {(isManager || isAdmin) && (
+            <LinkCard to="/dash/users" title="View User Settings" />
+          )}
+          {(isManager || isAdmin) && (
+            <LinkCard to="/dash/users/new" title="Add New User" />
+          )}
         </div>
       </div>
     </section>

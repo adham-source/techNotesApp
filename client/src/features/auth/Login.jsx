@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState, useEffect, lazy } from "react"
 import { useNavigate, Link } from "react-router-dom"
 
 import { useDispatch } from "react-redux"
@@ -9,12 +9,13 @@ import usePersist from "../../hooks/usePersist"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons"
-import Spinner from "../../components/Spinner"
 import useTitle from "../../hooks/useTitle"
+
+const Spinner = lazy(() => import("../../components/Spinner"))
 
 const Login = () => {
   useTitle("Employee Login")
-  
+
   const userRef = useRef()
   const errRef = useRef()
 
@@ -69,7 +70,7 @@ const Login = () => {
 
   const handleEmailInput = (e) => setEmail(e.target.value)
   const handlePasswordInput = (e) => setPassword(e.target.value)
-  const handleToggle = () => setPersist(prev => !prev)
+  const handleToggle = () => setPersist((prev) => !prev)
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword)

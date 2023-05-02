@@ -1,7 +1,8 @@
+import { Suspense, lazy } from "react"
 import { useGetUsersQuery } from "./usersApiSlice"
-import User from "./User"
-import Spinner from "../../components/Spinner"
-import ErrorMessage from "../../errors/ErrorMessage"
+import { PulseLoader } from "react-spinners"
+const User = lazy(() => import("./User"))
+const ErrorMessage = lazy(() => import("../../errors/ErrorMessage"))
 
 const UsersList = () => {
   const {
@@ -18,16 +19,20 @@ const UsersList = () => {
 
   let content
 
-  if (isLoading) content = (<Spinner />)
+  if (isLoading) content = <PulseLoader color="#FFF" />
 
   if (isError) {
-    content = <ErrorMessage errorMessage={error?.data?.message} />
+    content = (
+      <Suspense fallback={<PulseLoader color="#FFF" />}>
+        <ErrorMessage errorMessage={error?.data?.message} />
+      </Suspense>
+    )
   }
   if (isSuccess) {
     const { ids } = users
 
-    const tableContent = ids?.length && ids.map((userId) => <User key={userId} userId={userId} />)
-      
+    const tableContent =
+      ids?.length && ids.map((userId) => <User key={userId} userId={userId} />)
 
     content = (
       <div className="overflow-x-auto">

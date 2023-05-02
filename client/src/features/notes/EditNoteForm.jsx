@@ -95,10 +95,15 @@ const EditNoteForm = ({ note, users }) => {
     deleteButton = (
       <button
         className="p-2 text-white bg-red-500 rounded hover:bg-red-600"
-        title="Delete"
+        title={isDelError ? "Disabled" : "Delete"}
         onClick={onDeleteNoteClicked}
+        disabled={isDelError}
       >
-        <FontAwesomeIcon icon={faTrashCan} />
+        {isDelLoading ? (
+          <PulseLoader size={8} color="#FFF" />
+        ) : (
+          <FontAwesomeIcon icon={faTrashCan} />
+        )}
       </button>
     )
   }
@@ -121,7 +126,11 @@ const EditNoteForm = ({ note, users }) => {
               onClick={onSaveNoteClicked}
               disabled={!canSave}
             >
-              <FontAwesomeIcon icon={faSave} />
+              {isLoading ? (
+                <PulseLoader size={8} color="#FFF" />
+              ) : (
+                <FontAwesomeIcon icon={faSave} />
+              )}
             </button>
             {deleteButton}
           </div>

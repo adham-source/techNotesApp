@@ -1,19 +1,14 @@
-// import { useSelector } from "react-redux"
-// import { selectAllUsers } from "../users/usersApiSlice"
+
 import { useGetUsersQuery } from "../users/usersApiSlice"
 
-import NewNoteForm from "./NewNoteForm"
-// import ErrorMessage from "../../errors/ErrorMessage"
 import PulseLoader from "react-spinners/PulseLoader"
 import useTitle from "../../hooks/useTitle"
+import { Suspense, lazy } from "react"
+
+const NewNoteForm = lazy(() => import("./NewNoteForm"))
 
 const NewNote = () => {
    useTitle("techNotes: New Note")
-  // const users = useSelector(selectAllUsers)
-  // if (!users?.length)
-  //   return <ErrorMessage errorMessage={"Not Currently Available"} />
-
-  // const content = <NewNoteForm users={users} />
 
   const { users } = useGetUsersQuery("usersList", {
     selectFromResult: ({ data }) => ({
@@ -23,7 +18,12 @@ const NewNote = () => {
 
   if (!users?.length) return <PulseLoader color={"#FFF"} />
 
-  const content = <NewNoteForm users={users} />
+  const content = (
+    <Suspense fallback={<PulseLoader color="#FFF" />}>
+      <NewNoteForm users={users} />
+    </Suspense>
+  )
+  
   return content
 }
 export default NewNote

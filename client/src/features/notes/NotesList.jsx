@@ -1,8 +1,10 @@
-import { useGetNotesQuery } from "./notesApiSlice"
-import Note from "./Note"
-import ErrorMessage from "../../errors/ErrorMessage"
-import useAuth from "../../hooks/useAuth"
 import { PulseLoader } from "react-spinners"
+import { Suspense, lazy } from "react"
+import { useGetNotesQuery } from "./notesApiSlice"
+
+import useAuth from "../../hooks/useAuth"
+const Note = lazy(() => import("./Note"))
+const ErrorMessage = lazy(() => import("../../errors/ErrorMessage"))
 
 const NotesList = () => {
   const { email, isManager, isAdmin } = useAuth()
@@ -23,25 +25,32 @@ const NotesList = () => {
   if (isLoading) return <PulseLoader color={"#FFF"} />
 
   if (isError) {
-    content = <ErrorMessage errorMessage={error?.data?.message} />
+    content = (
+      <Suspense fallback={<PulseLoader color="#FFF" />}>
+        <ErrorMessage errorMessage={error?.data?.message} />
+      </Suspense>
+    )
   }
 
   if (isSuccess) {
     const { ids, entities } = notes
-    
+
     let filteredIds
     if (isManager || isAdmin) {
       filteredIds = [...ids]
     } else {
-      
       filteredIds = ids.filter(
         (noteId) => entities[noteId].user.email === email,
-      )      
+      )
     }
 
     const tableContent =
       ids?.length &&
-      filteredIds.map((noteId) => <Note key={noteId} noteId={noteId} />)
+      filteredIds.map((noteId) => (
+        
+          <Note key={noteId} noteId={noteId} />
+       
+      ))
 
     content = (
       <div className="container mx-auto overflow-x-auto">

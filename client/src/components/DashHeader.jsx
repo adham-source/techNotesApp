@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { Suspense, lazy, useEffect } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faFileCirclePlus,
@@ -12,6 +12,8 @@ import { useNavigate, Link, useLocation } from "react-router-dom"
 import { useSendLogoutMutation } from "../features/auth/authApiSlice"
 import { PulseLoader } from "react-spinners"
 import useAuth from "../hooks/useAuth"
+
+const ErrorMessage = lazy(() => import("../errors/ErrorMessage"))
 
 const DASH_REGEX = /^\/dash(\/)?$/
 const NOTES_REGEX = /^\/dash\/notes(\/)?$/
@@ -126,22 +128,23 @@ const DashHeader = () => {
         </>
       )
     }
-
-
-    //  if (isError) return <ErrorMessage errorMessage={error.data?.message} />
-
    
 
     const content = (
       <>
-        {isError ? <ErrorMessage errorMessage={error?.data?.message} /> : ""}
+        <Suspense fallback={<PulseLoader color="#FFF" />}>
+          {isError ? <ErrorMessage errorMessage={error?.data?.message} /> : ""}
+        </Suspense>
+
         {/* <p className={errClass}>{error?.data?.message}</p> */}
         <header className="bg-gray-800 text-white border-b py-3">
           <div className="container mx-auto flex justify-between items-center px-2">
             <Link to="/dash">
               <h1 className="text-xl font-bold">techNotes</h1>
             </Link>
-            <nav className="flex items-center gap-5 text-xl">{buttonContent}</nav>
+            <nav className="flex items-center gap-5 text-xl">
+              {buttonContent}
+            </nav>
           </div>
         </header>
       </>

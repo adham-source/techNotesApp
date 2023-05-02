@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, lazy, Suspense } from "react"
 import { useUpdateUserMutation, useDeleteUserMutation } from "./usersApiSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -8,8 +8,10 @@ import {
   faEyeSlash,
   faEye,
 } from "@fortawesome/free-solid-svg-icons"
-import ErrorMessage from "../../errors/ErrorMessage"
 import { ROLES } from "../../config/roles"
+import { PulseLoader } from "react-spinners"
+
+const ErrorMessage = lazy(() => import("../../errors/ErrorMessage"))
 
 const NAME_REGEX = /^(?:[A-Za-z]{3,}\b|(?:[A-Za-z]+\s){1,2}[A-Za-z]+)$/
 const PASSWORD_REGEX = /^[A-z0-9!@#$%]{8,30}$/
@@ -21,7 +23,12 @@ const EditUserForm = ({ user }) => {
 
   const [
     deleteUser,
-    { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
+    {
+      isSuccess: isDelSuccess,
+      isError: isDelError,
+      error: delerror,
+      isLoading: isDeleteLoading,
+    },
   ] = useDeleteUserMutation()
 
   const navigate = useNavigate()
@@ -123,7 +130,13 @@ const EditUserForm = ({ user }) => {
 
   const content = (
     <>
-      {errContent || isError ? <ErrorMessage errorMessage={errContent} /> : ""}
+      <Suspense fallback={<PulseLoader color="#FFF" />}>
+        {errContent || isError ? (
+          <ErrorMessage errorMessage={errContent} />
+        ) : (
+          ""
+        )}
+      </Suspense>
       <form
         className="bg-gray-800 p-2 rounded"
         onSubmit={(e) => e.preventDefault()}
@@ -137,14 +150,23 @@ const EditUserForm = ({ user }) => {
               onClick={onSaveUserClicked}
               disabled={!canSave}
             >
-              <FontAwesomeIcon icon={faSave} />
+              {isLoading ? (
+                <PulseLoader size={8} color="#FFF" />
+              ) : (
+                <FontAwesomeIcon icon={faSave} />
+              )}
             </button>
             <button
               className="p-2 text-white bg-red-500 rounded hover:bg-red-600"
-              title="Delete"
+              title={isDelError ? "Disabled" : "Delete"}
+              disabled={isDelError}
               onClick={onDeleteUserClicked}
             >
-              <FontAwesomeIcon icon={faTrashCan} />
+              {isDeleteLoading ? (
+                <PulseLoader size={8} color="#FFF" />
+              ) : (
+                <FontAwesomeIcon icon={faTrashCan} />
+              )}
             </button>
           </div>
         </div>
