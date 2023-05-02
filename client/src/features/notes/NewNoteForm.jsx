@@ -76,7 +76,7 @@ const NewtNoteForm = ({ users }) => {
             disabled={!canSave}
           >
             <FontAwesomeIcon icon={faSave} className="mr-2" />
-            {isLoading ? <PulseLoader size={8} color="#FFF" /> : Save}
+            {isLoading ? <PulseLoader size={8} color="#FFF" /> : "Save"}
           </button>
         </div>
         <label htmlFor="title" className="block text-sm font-medium mb-1">

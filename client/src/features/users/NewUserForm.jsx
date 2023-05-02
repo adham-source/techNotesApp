@@ -110,7 +110,7 @@ const NewUserForm = () => {
             disabled={!canSave}
           >
             <FontAwesomeIcon icon={faSave} className="mr-2" />
-            {isLoading ? <PulseLoader size={8} color="#FFF" /> : "save"}
+            {isLoading ? <PulseLoader size={8} color="#FFF" /> : "Save"}
           </button>
         </div>
         <label htmlFor="username" className="block text-sm font-medium mb-1">
