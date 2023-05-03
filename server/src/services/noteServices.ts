@@ -9,10 +9,10 @@ class NoteServices {
             }).trim().refine((value) => isValidObjectId(value), 'Invalid Assign'),
             title: string({
                 required_error: "Title is required."
-            }).trim().min(3, "Title must contain at least 3 characters").max(20),
+            }).trim().min(3, "Title must contain at least 3 characters").max(20, "Title must contain at most 20 charcters."),
             text: string({
                 required_error: "Text is required."
-            }).trim().min(10, "Text must contain at least 10 characters").max(1000),
+            }).trim().min(10, "Text must contain at least 10 characters").max(1000,"Text must contain at most 1000 charcters."),
             completed: boolean().default(false)
         }).strict()
     }
