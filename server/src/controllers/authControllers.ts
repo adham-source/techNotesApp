@@ -8,7 +8,7 @@ import keys from "../config/keys"
 import jwtUtils from "../utils/jwt"
 
 const { comparePassword } = bcryptUtlis
-const { ACCESS_TOKEN_SECRET ,REFRESH_TOKEN_SECRET } = keys
+const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = keys
 const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = jwtUtils
 
 class AuthControllers {
@@ -17,39 +17,19 @@ class AuthControllers {
         * @route POST /api/v1/auth
         * @access Public
     */
-    login = expressAsyncHandler(async(req: Request, res: Response): Promise<void> => {
+    login = expressAsyncHandler(async (req: Request, res: Response): Promise<void> => {
         const { email, password } = req.body
 
-        const user = await User.findOne({email}).exec()
+        const user = await User.findOne({ email }).exec()
 
-        if(!user || !user.active) {
+        if (!user || !user.active) {
             throw new CustomErrors(401, "Invalid email or password")
         }
 
         const isMatch = await comparePassword(password, user.password)
-        if(!isMatch) {
+        if (!isMatch) {
             throw new CustomErrors(401, "Invalid email or password")
         }
-
-        // // Refactoring this code into separate file and functions ?!
-        // const accessToken = jwt.sign(
-        //     {
-        //         "UserInfo": {
-        //             "name": user.name,
-        //             "email": user.email,
-        //             "roles": user.roles
-        //         }
-        //     },
-        //     ACCESS_TOKEN_SECRET,
-        //     { expiresIn: '15m' }
-        // )
-
-        // const refreshToken = jwt.sign(
-        //     // Using name but username in project is unique change after testing (email || _id)
-        //     { "id": user._id, "name": user.name },
-        //     REFRESH_TOKEN_SECRET,
-        //     { expiresIn: '7d' }
-        // )
 
         const accessToken: string = generateAccessToken({
             userId: user._id.toString(),
@@ -60,7 +40,7 @@ class AuthControllers {
 
         const refreshToken: string = generateRefreshToken(user._id.toString(), user.name)
 
-        
+
 
         // Create secure cookie with refresh token 
         res.cookie('jwt', refreshToken, {
@@ -101,34 +81,6 @@ class AuthControllers {
             roles: user.roles
         })
         res.json({ success: true, accessToken })
-
-        // jwt.verify(
-        //     refreshToken,
-        //     REFRESH_TOKEN_SECRET,
-        //     expressAsyncHandler(async (err: Error, decoded: JwtPayload): Promise<void> => {
-        //         if (err) {
-        //             throw new CustomErrors(403, 'Forbidden')
-        //         }
-        //         const user = await User.findOne({ name: decoded.name, _id: decoded.id }).exec();
-
-        //         if (!user) {
-        //             throw new CustomErrors(401, 'Unauthorized');
-        //         }
-        //         const accessToken = jwt.sign(
-        //             {
-        //                 UserInfo: {
-        //                     name: user.name,
-        //                     email: user.email,
-        //                     roles: user.roles,
-        //                 },
-        //             },
-        //             ACCESS_TOKEN_SECRET,
-        //             { expiresIn: '15m' },
-        //         );
-
-        //         res.json({ accessToken });
-        //     }),
-        // );
     })
 
     /**
@@ -140,7 +92,7 @@ class AuthControllers {
         const cookies = req.cookies
         if (!cookies?.jwt) {
             res.sendStatus(204) // No content
-            return 
+            return
         }
         res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true })
         res.json({ success: true, message: 'Cookie cleared' })

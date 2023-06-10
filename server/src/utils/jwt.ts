@@ -12,7 +12,7 @@ const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = keys
 class JwtUtils {
     generateAccessToken(UserInfo: Payload): string { // Adding id only `Fetch data from DB`
         const payload: Payload = { ...UserInfo }
-        const options: SignOptions = { expiresIn: '15m' }
+        const options: SignOptions = { expiresIn: '15s' }
         return jwt.sign(payload, ACCESS_TOKEN_SECRET as string, options)
     }
 
